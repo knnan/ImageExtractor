@@ -85,17 +85,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
         output += `<div class="col s4">
 <div class="card ">
                 <div class="card-image">
-                    <img src=${message.data[ i ]} alt="" class="downloadbutton"/>
+                    <img src=${message.data[ i ]} alt="" class="downloadbutton1"/>
                 </div>
-                 <a class="btn-floating halfway-fab waves-effect waves-light  ">
-               <i class="tiny material-icons downloadbutton">arrow_downward</i>
+                 <a class="btn-floating halfway-fab waves-effect waves-light  "   >
+               <i class="tiny material-icons downloadbutton"   customattr=${message.data[ i ]}>arrow_downward</i>
                </a>
             </div>
             </div>`;
     }
     imagediv.innerHTML = output;
 
-    var elementsArray = document.getElementsByClassName('downloadbutton');
+    var elementsArray = document.getElementsByClassName('downloadbutton1');
+    var buttonarray = document.getElementsByClassName('downloadbutton');
     for (let i = 0; i < elementsArray.length; i++)
     {
 
@@ -106,6 +107,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
             console.log('Event', e.target.currentSrc);
             chrome.downloads.download({
                 url: String(e.target.currentSrc),
+                saveAs: false
+            });
+        });
+        buttonarray[ i ].addEventListener("click", function (e)
+        {
+            //this function does stuff
+            var eventobj = e.path[ 0 ].attributes;
+            url1 = eventobj.customattr.value;
+            console.log(eventobj);
+            console.log('download INitiated');
+            chrome.downloads.download({
+                url: String(url1),
                 saveAs: false
             });
         });

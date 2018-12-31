@@ -98,6 +98,11 @@ async function checglb ()
         temp.innerHTML = result[ i ].html;
         try
         {
+            obj = {
+                src: temp.querySelector('[data-sigil="torpedo-img"]').src.split('/v1')[ 0 ],
+                alt: temp.querySelector('[data-sigil="torpedo-img"]').alt.split('by')[ 0 ]
+            }
+            // console.log(obj);
             images.push(temp.querySelector('[data-sigil="torpedo-img"]').src.split('/v1')[ 0 ]);
         } catch (err)
         {
