@@ -3,6 +3,7 @@ var msg = {
     request: undefined,
     response: undefined
 };
+var Folder;
 
 document.getElementById('button1').addEventListener('click', (e) =>
 {
@@ -21,6 +22,26 @@ document.getElementById('button1').addEventListener('click', (e) =>
 
     };
 });
+
+document.querySelector('form').addEventListener('submit', (e) =>
+{
+    const formData = new FormData(e.target);
+    console.log(formData.get('subfolder'));
+    Folder = formData.get('subfolder');
+    e.preventDefault();
+});
+
+// chrome.downloads.onDeterminingFilename.addListener(getfiletype);
+// function getfiletype (item, suggest)
+// {
+//     console.log("This is the file type");
+//     console.log(item);
+//     newFilename = String(Folder) + "." + String(item.filename).split(".")[ 1 ];
+//     suggest({ filename: newFilename });
+//     console.log("finished naming", newFilename);
+// }
+
+
 
 
 
@@ -74,48 +95,60 @@ getDetails();
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
 {
     console.log(message);
+    console.log(message.data.length);
     imagediv = document.getElementById('image-gallery');
     output1 = '';
     output = '';
-    for (let i = 0; i < message.data.length; i++)
+    for (let i = 0; i < message.data.src.length; i++)
     {
         output1 += `<div class="col s4">            
-                <img src=${message.data[ i ]}  class="responsive-img z-depth 2"/>
+                <img src=${message.data.src[ i ]}  class="responsive-img z-depth 4 "/>
                 </div>`;
         output += `<div class="col s4">
 <div class="card ">
                 <div class="card-image">
-                    <img src=${message.data[ i ]} alt="" class="downloadbutton1"/>
+                    <img src=${message.data.src[ i ]}  class="downloadbutton1"   alt="${message.data.titles[ i ]}"  />
+                    
                 </div>
                  <a class="btn-floating halfway-fab waves-effect waves-light  "   >
-               <i class="tiny material-icons downloadbutton"   customattr=${message.data[ i ]}>arrow_downward</i>
+               <i class="tiny material-icons downloadbutton"   customattr=${message.data.src[ i ]}  imagename="${message.data.titles[ i ]}" >arrow_downward</i>
                </a>
+              
             </div>
             </div>`;
     }
     imagediv.innerHTML = output;
 
-    var elementsArray = document.getElementsByClassName('downloadbutton1');
+    var imageElementarray = document.getElementsByClassName('downloadbutton1');
     var buttonarray = document.getElementsByClassName('downloadbutton');
-    for (let i = 0; i < elementsArray.length; i++)
+    for (let i = 0; i < imageElementarray.length; i++)
     {
 
-        elementsArray[ i ].addEventListener("click", function (e)
+        imageElementarray[ i ].addEventListener("click", function (e)
         {
             //this function does stuff
             console.log('download INitiated');
-            console.log('Event', e.target.currentSrc);
+            var eventobj = e.target.attributes;
+
+            Filename = eventobj.alt.value.trim().replace(/ |\./g, "_");
+            Folder = String(Folder) + "/" + Filename;
+            console.log('filename', Filename);
+
             chrome.downloads.download({
-                url: String(e.target.currentSrc),
+                url: String(e.target.attributes.src.value),
                 saveAs: false
             });
         });
         buttonarray[ i ].addEventListener("click", function (e)
         {
+            console.log('Event', e.target);
             //this function does stuff
-            var eventobj = e.path[ 0 ].attributes;
+            var eventobj = e.target.attributes;
             url1 = eventobj.customattr.value;
-            console.log(eventobj);
+
+            Filename = eventobj.imagename.value.trim().replace(/ |\./g, "_");
+            Folder = String(Folder) + "/" + Filename;
+
             console.log('download INitiated');
             chrome.downloads.download({
                 url: String(url1),
@@ -126,9 +159,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
     document.getElementById('button2').addEventListener('click', (e) =>
     {
         images = document.querySelectorAll('img');
+        var tempfile=Folder;
         for (let i = 0; i < images.length; i++)
         {
-            downloadsrc = images[ i ].currentSrc;
+            Folder = undefined;
+            downloadsrc = images[ i ].src;
+
+            Filename = images[i].alt.trim().replace(/ |\./g, "_");
+            // Folder = String(tempfile) + "/" + Filename;
+            console.log("Batch download", Folder);
+
             chrome.downloads.download({
                 url: String(downloadsrc),
                 saveAs: false
