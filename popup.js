@@ -5,41 +5,53 @@ var msg = {
 };
 var Folder;
 
-document.getElementById('button1').addEventListener('click', (e) =>
-{
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, gottab);
-    function gottab (tab)
+// document.getElementById('button1').addEventListener('click', (e) =>
+// {
+//     chrome.tabs.query({
+//         active: true,
+//         currentWindow: true
+//     }, gottab);
+//     function gottab (tab)
+//     {
+//         console.log(tab);
+//         chrome.tabs.executeScript(tab.id, { code: "window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);" }, function (response)
+//         {
+//             console.log('script executed');
+//         });
+
+
+//     };
+// });
+
+document.getElementById('refresh').addEventListener('click', (e) => {
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs)
     {
-        console.log(tab);
-        chrome.tabs.executeScript(tab.id, { code: "window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);" }, function (response)
-        {
-            console.log('script executed');
-        });
-
-
-    };
+        chrome.tabs.update(tabs[ 0 ].id, { url: tabs[ 0 ].url });
+    });
 });
 
 document.querySelector('form').addEventListener('submit', (e) =>
 {
     const formData = new FormData(e.target);
     console.log(formData.get('subfolder'));
-    Folder = formData.get('subfolder');
+    Folder = String(formData.get('subfolder'))+"/";
     e.preventDefault();
 });
 
-// chrome.downloads.onDeterminingFilename.addListener(getfiletype);
-// function getfiletype (item, suggest)
-// {
-//     console.log("This is the file type");
-//     console.log(item);
-//     newFilename = String(Folder) + "." + String(item.filename).split(".")[ 1 ];
-//     suggest({ filename: newFilename });
-//     console.log("finished naming", newFilename);
-// }
+chrome.downloads.onDeterminingFilename.addListener(getfiletype);
+function getfiletype (item, suggest)
+{
+    console.log("This is the file type");
+    console.log(item);
+    if (Folder == undefined)
+    {
+        Folder = "";
+        }
+    newFilename = String(Folder)+ String(item.filename);
+    suggest({ filename: newFilename });
+    console.log("finished naming", newFilename);
+}
 
 
 
@@ -88,6 +100,7 @@ async function getDetails ()
     msg.headers = Headers;
     msg.request = Request;
     chrome.tabs.sendMessage(tab[ 0 ].id, msg);
+    M.toast({ html: 'parsed!' })
     chrome.webRequest.onBeforeSendHeaders.removeListener(this.getHeaders);
     chrome.webRequest.onBeforeRequest.removeListener(this.getResponse);
 }
@@ -95,7 +108,9 @@ getDetails();
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
 {
     console.log(message);
-    console.log(message.data.length);
+    console.log(message.data.src.length);
+    document.getElementById("totalimages").innerText = String(message.data.src.length);
+    console.log(document.getElementById("totalimages"));
     imagediv = document.getElementById('image-gallery');
     output1 = '';
     output = '';
@@ -129,10 +144,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
             //this function does stuff
             console.log('download INitiated');
             var eventobj = e.target.attributes;
-
-            Filename = eventobj.alt.value.trim().replace(/ |\./g, "_");
-            Folder = String(Folder) + "/" + Filename;
-            console.log('filename', Filename);
+            // Filename = eventobj.alt.value.trim().replace(/ |\./g, "_");
+            // Folder = String(Folder) + "/" + Filename;
+            console.log('filename', Folder);
 
             chrome.downloads.download({
                 url: String(e.target.attributes.src.value),
@@ -146,8 +160,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
             var eventobj = e.target.attributes;
             url1 = eventobj.customattr.value;
 
-            Filename = eventobj.imagename.value.trim().replace(/ |\./g, "_");
-            Folder = String(Folder) + "/" + Filename;
+            // Filename = eventobj.imagename.value.trim().replace(/ |\./g, "_");
+            // Folder = String(Folder) + "/" + Filename;
 
             console.log('download INitiated');
             chrome.downloads.download({
@@ -162,10 +176,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
         var tempfile=Folder;
         for (let i = 0; i < images.length; i++)
         {
-            Folder = undefined;
             downloadsrc = images[ i ].src;
 
-            Filename = images[i].alt.trim().replace(/ |\./g, "_");
+            // Filename = images[i].alt.trim().replace(/ |\./g, "_");
             // Folder = String(tempfile) + "/" + Filename;
             console.log("Batch download", Folder);
 
