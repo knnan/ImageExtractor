@@ -55,17 +55,6 @@ async function checglb ()
 {
     var bodystring = `username=${username}&offset=`;
     var bodystring2 = `&limit=${limit}&_csrf=${csrf}&dapiIid=${dapiid}`;
-    // console.log({
-    //     pageNo: pageNo,
-    //     url: url,
-    //     origin: origin,
-    //     username: username,
-    //     csrf: csrf,
-    //     referer: referer,
-    //     offset: offset,
-    //     limit: limit,
-    //     dapiid: dapiid
-    // });
 
     console.log(bodystring)
 
@@ -107,7 +96,6 @@ async function checglb ()
                 src: temp.querySelector('[data-sigil="torpedo-img"]').src.split('/v1')[ 0 ],
                 alt: temp.querySelector('[data-sigil="torpedo-img"]').alt.split('by')[ 0 ]
             }
-            // console.log(obj);
             images.push(temp.querySelector('[data-sigil="torpedo-img"]').src.split('/v1')[ 0 ]);
             alt2.push(temp.querySelector('[data-sigil="torpedo-img"]').alt.split('by')[ 0 ]);
         } catch (err)

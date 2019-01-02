@@ -5,23 +5,6 @@ var msg = {
 };
 var Folder;
 
-// document.getElementById('button1').addEventListener('click', (e) =>
-// {
-//     chrome.tabs.query({
-//         active: true,
-//         currentWindow: true
-//     }, gottab);
-//     function gottab (tab)
-//     {
-//         console.log(tab);
-//         chrome.tabs.executeScript(tab.id, { code: "window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);" }, function (response)
-//         {
-//             console.log('script executed');
-//         });
-
-
-//     };
-// });
 
 document.getElementById('refresh').addEventListener('click', (e) => {
 
@@ -144,10 +127,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
             //this function does stuff
             console.log('download INitiated');
             var eventobj = e.target.attributes;
-            // Filename = eventobj.alt.value.trim().replace(/ |\./g, "_");
-            // Folder = String(Folder) + "/" + Filename;
-            console.log('filename', Folder);
-
             chrome.downloads.download({
                 url: String(e.target.attributes.src.value),
                 saveAs: false
@@ -160,9 +139,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
             var eventobj = e.target.attributes;
             url1 = eventobj.customattr.value;
 
-            // Filename = eventobj.imagename.value.trim().replace(/ |\./g, "_");
-            // Folder = String(Folder) + "/" + Filename;
-
+            
             console.log('download INitiated');
             chrome.downloads.download({
                 url: String(url1),
@@ -178,8 +155,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
         {
             downloadsrc = images[ i ].src;
 
-            // Filename = images[i].alt.trim().replace(/ |\./g, "_");
-            // Folder = String(tempfile) + "/" + Filename;
+        
             console.log("Batch download", Folder);
 
             chrome.downloads.download({
