@@ -104,6 +104,8 @@ async function checglb ()
         }
     }
     console.log(images);
+
+
     src = src.concat(images);
     altmain = altmain.concat(alt2);
     console.log(src);
