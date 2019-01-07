@@ -39,7 +39,6 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage (message, sender, sendResponnse)
 {
-    console.log(message);
 
     url = message.headers.url.split('mp=')[ 0 ];
     origin = message.headers.requestHeaders[ 0 ].value;
@@ -56,7 +55,6 @@ async function checglb ()
     var bodystring = `username=${username}&offset=`;
     var bodystring2 = `&limit=${limit}&_csrf=${csrf}&dapiIid=${dapiid}`;
 
-    console.log(bodystring)
 
     var pages = 1;
     while (true)
@@ -103,16 +101,10 @@ async function checglb ()
             console.log(err);
         }
     }
-    console.log("srcbefore",src);
-    console.log("altmain",altmain);
-    console.log("images",images);
-    console.log("alt2", alt2);
     for (let i = 0; i < images.length; i++)
     {
-        console.log('this is loop');
         if (src.length > 0)
         {
-            console.log(src[ i ], images[ i ]);
             if (!src.includes(images[i]))
             {
                 src.push(images[ i ]);
@@ -127,9 +119,6 @@ async function checglb ()
     }
 
 
-    // src = src.concat(images);
-    // altmain = altmain.concat(alt2);
-    console.log("altmainfinal", altmain);
     chrome.runtime.sendMessage({
         data: {
             src: src,
