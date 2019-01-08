@@ -4,6 +4,8 @@ var msg = {
     response: undefined
 };
 var Folder;
+var glbmessage;
+
 
 
 document.getElementById('refresh').addEventListener('click', (e) => {
@@ -27,11 +29,20 @@ function getfiletype (item, suggest)
 {
     console.log("This is the file type");
     console.log(item);
+    var index = glbmessage.data.src.indexOf(item.finalUrl);
+    let filename = glbmessage.data.titles[ index ].trim().replace(/ |\./g, "_");
+
     if (Folder == undefined)
     {
         Folder = "";
-        }
-    newFilename = String(Folder)+ String(item.filename);
+    }
+    if (filename == undefined)
+    {
+        filename = "";
+    }
+    newFilename = String(Folder) + String(filename) + "." + String(item.filename).split(".")[ 1 ];
+
+    // newFilename = String(Folder)+ String(item.filename);
     suggest({ filename: newFilename });
     console.log("finished naming", newFilename);
 }
@@ -90,6 +101,7 @@ async function getDetails ()
 getDetails();
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
 {
+    glbmessage = message;
     console.log(message);
     console.log(message.data.src.length);
     document.getElementById("totalimages").innerText = String(message.data.src.length);
