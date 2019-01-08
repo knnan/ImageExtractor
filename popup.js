@@ -28,7 +28,7 @@ function getfiletype (item, suggest)
 {
     console.log(glbmessage);
     var index = glbmessage.data.src.indexOf(item.finalUrl);
-    console.log("this is the name of the images", glbmessage.data.titles[ index ]);
+    console.log("this is the name of the images", glbmessage.data.titles[ index ].trim().replace(/ |\./g, "_"));
     console.log("This is the file type");
     console.log(item);
     if (Folder == undefined)
