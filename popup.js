@@ -4,6 +4,7 @@ var msg = {
     response: undefined
 };
 var Folder;
+var glbmessage;
 
 
 document.getElementById('refresh').addEventListener('click', (e) => {
@@ -25,6 +26,9 @@ document.querySelector('form').addEventListener('submit', (e) =>
 chrome.downloads.onDeterminingFilename.addListener(getfiletype);
 function getfiletype (item, suggest)
 {
+    console.log(glbmessage);
+    var index = glbmessage.data.src.indexOf(item.finalUrl);
+    console.log("this is the name of the images", glbmessage.data.titles[ index ]);
     console.log("This is the file type");
     console.log(item);
     if (Folder == undefined)
@@ -90,6 +94,7 @@ async function getDetails ()
 getDetails();
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse)
 {
+    glbmessage = message;
     console.log(message);
     console.log(message.data.src.length);
     document.getElementById("totalimages").innerText = String(message.data.src.length);
