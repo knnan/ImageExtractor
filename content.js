@@ -42,7 +42,7 @@ function gotMessage (message, sender, sendResponnse)
 
     url = message.headers.url.split('mp=')[ 0 ];
     origin = message.headers.requestHeaders[ 0 ].value;
-    referer = message.headers.requestHeaders[ 4 ].value;
+    // referer = message.headers.requestHeaders[ 4 ].value;
     username = message.request.requestBody.formData.username[ 0 ];
     limit = message.request.requestBody.formData.limit[ 0 ];
     offset = message.request.requestBody.formData.offset[ 0 ];
@@ -66,7 +66,7 @@ async function checglb ()
                 "accept-language": "en-US,en;q=0.9",
                 "content-type": "application/x-www-form-urlencoded"
             },
-            "referrer": referer,
+            // "referrer": referer,
             "referrerPolicy": "no-referrer-when-downgrade",
             "body": `${bodystring}${offset}${bodystring2}`,
             "method": "POST",
@@ -105,7 +105,7 @@ async function checglb ()
     {
         if (src.length > 0)
         {
-            if (!src.includes(images[i]))
+            if (!src.includes(images[ i ]))
             {
                 src.push(images[ i ]);
                 altmain.push(alt2[ i ]);
@@ -122,11 +122,11 @@ async function checglb ()
     chrome.runtime.sendMessage({
         data: {
             src: src,
-            titles:altmain
-            
+            titles: altmain
+
         }
     }, function (response)
-    {
-        console.dir(response);
-    });
+        {
+            console.dir(response);
+        });
 }
