@@ -1,7 +1,7 @@
 {
-    "name": "ImageExtractor",
+    "name": "ImageExtractor_V2",
     "description": "Extracts image urls",
-    "version": "1.0",
+    "version": "2.0",
     "manifest_version": 2,
     "web_accessible_resources": [
         "script.js"
@@ -12,25 +12,24 @@
                 "<all_urls>"
             ],
             "js": [
-                "content.js"
+                "content.js","axios.min.js"
             ]
         }
     ],
     "permissions": [
-        "storage",
-        "activeTab",
-        "tabs",
-        "webRequest",
-        "webRequestBlocking",
-        "downloads"
+        "webRequest","webRequestBlocking","https://www.deviantart.com/pyxartz/gallery","downloads"
     ],
     "background": {
         "scripts": [
             "background.js"
         ]
     },
+
     "browser_action": {
         "default_icon": "devian.png",
         "default_popup": "popup.html"
-    }
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+
+
 }
