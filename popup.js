@@ -16,11 +16,7 @@ function downloadit(dourl)
 
 
 document.getElementById('refresh').addEventListener('click', (e) => {
-let d = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/40b917ca-54f0-4d4a-b0e7-b3034357dc15/d6v5rki-0d8b2f93-34a1-4529-a88d-3b0f2f39d797.jpg/v1/fit/w_150,h_150,q_70,strp/tentacel_beast_by_pyxartz_d6v5rki-150.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA4MCIsInBhdGgiOiJcL2ZcLzQwYjkxN2NhLTU0ZjAtNGQ0YS1iMGU3LWIzMDM0MzU3ZGMxNVwvZDZ2NXJraS0wZDhiMmY5My0zNGExLTQ1MjktYTg4ZC0zYjBmMmYzOWQ3OTcuanBnIiwid2lkdGgiOiI8PTE5ODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.GAED2QZOrv9eIll6UsDeN2_v8voB3z5KtgJ_OgeurJw";
-  chrome.downloads.download({
-                url: d,
-                saveAs: false
-            });
+
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs)
     {
         console.log("sldjfkjlasdjljsd;j;lsjdfjl;jasldjlksjdflk")
@@ -109,7 +105,9 @@ async function getData()
 {
      const [ Headers, tab ] = await Promise.all([ this.getHeaders(),this.getTab() ]);
     msg.headers = Headers;
-    res = await axios.get("https://www.deviantart.com/pyxartz/gallery");
+    console.log('ksdljfl');
+    console.log(Headers);
+    res = await axios.get(Headers.url);
     data = res.data;
 let doc = new DOMParser().parseFromString(data, 'text/html');
 
@@ -120,6 +118,7 @@ let init = config_string[0].indexOf('JSON.parse(');
 let fin = config_string[0].indexOf(');');
 let final_string = '"'+config_string[0].substr(init+12,fin-init-12)
 let answer = JSON.parse(JSON.parse(final_string));
+console.log(answer);
 let devi  = answer['@@entities']['deviation']
 let all_src = [];
 let medias = []
@@ -130,9 +129,13 @@ media = devi[d].media;
  let baseURL = media.baseUri;
     let prettyName = media.prettyName;
     let token = media.token[0];
-    let pre_type = await media.types.filter( async t => {return t.t == 'preview'});
-    // console.log(pre_type);
-    let type_name = pre_type[0].c.replace('<prettyName>',prettyName)
+    let pre_type = await media.types.filter( async type => {
+    if(type.t == 'preview')
+    {
+        return true;
+    }
+    });
+    let type_name = pre_type[6].c.replace('<prettyName>',prettyName)
 
 
     let URL = `${baseURL}/${type_name}?token=${token}`
@@ -154,6 +157,7 @@ async function getDetails ()
 
     const [ Headers, tab ] = await Promise.all([ this.getHeaders(),this.getTab() ]);
     msg.headers = Headers;
+
     await this.getData();
 
     
@@ -223,6 +227,8 @@ function displayOutput(img_obj)
             //this function does stuff
             console.log('download INitiated');
             var eventobj = e.target.attributes;
+                        url1 = eventobj.customattr.value;
+
             chrome.downloads.download({
                 url: String(e.target.attributes.src.value),
                 saveAs: false
@@ -237,7 +243,10 @@ function displayOutput(img_obj)
 
             console.log(url1);
             console.log('download INitiated');
-            downloadit();
+             chrome.downloads.download({
+                url: String(url1),
+                saveAs: false
+            });
         });
     }
 
